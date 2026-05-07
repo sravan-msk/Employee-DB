@@ -5,7 +5,6 @@ const employees = [
     jobRole: "Software Engineer",
     salary: 75000,
     city: "Hyderabad",
-    gender: "Male",
   },
   {
     name: "Priya Reddy",
@@ -13,7 +12,6 @@ const employees = [
     jobRole: "Project Manager",
     salary: 95000,
     city: "Bangalore",
-    gender: "Female",
   },
   {
     name: "Rahul Verma",
@@ -21,7 +19,6 @@ const employees = [
     jobRole: "Data Analyst",
     salary: 68000,
     city: "Delhi",
-    gender: "Male",
   },
   {
     name: "Sneha Iyer",
@@ -29,7 +26,6 @@ const employees = [
     jobRole: "UI/UX Designer",
     salary: 72000,
     city: "Chennai",
-    gender: "Female",
   },
   {
     name: "Arjun Patel",
@@ -37,7 +33,6 @@ const employees = [
     jobRole: "DevOps Engineer",
     salary: 105000,
     city: "Pune",
-    gender: "Male",
   },
   {
     name: "Neha Gupta",
@@ -45,7 +40,6 @@ const employees = [
     jobRole: "QA Engineer",
     salary: 65000,
     city: "Noida",
-    gender: "Female",
   },
   {
     name: "Vikram Singh",
@@ -53,7 +47,6 @@ const employees = [
     jobRole: "Product Manager",
     salary: 98000,
     city: "Gurgaon",
-    gender: "Male",
   },
   {
     name: "Kavya Nair",
@@ -61,7 +54,6 @@ const employees = [
     jobRole: "Frontend Developer",
     salary: 60000,
     city: "Kochi",
-    gender: "Female",
   },
   {
     name: "Rohan Das",
@@ -69,7 +61,6 @@ const employees = [
     jobRole: "Backend Developer",
     salary: 82000,
     city: "Kolkata",
-    gender: "Male",
   },
   {
     name: "Ananya Kapoor",
@@ -77,7 +68,6 @@ const employees = [
     jobRole: "HR Manager",
     salary: 90000,
     city: "Mumbai",
-    gender: "Female",
   },
 ];
 
@@ -108,3 +98,30 @@ function empInfo(emp) {
 }
 renderEmps();
 empInfo(employees[0]);
+
+// addEmployeeLogic
+
+let addEmp = document.querySelector(".addEmp");
+let formContainer = document.querySelector(".form-container");
+let form = document.getElementById("form");
+
+addEmp.addEventListener("click", () => {
+  formContainer.style.display = "flex";
+});
+
+formContainer.addEventListener("click", (e) => {
+  if (e.target.className === "form-container") {
+    formContainer.style.display = "none";
+  }
+});
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(form));
+  employees.push(data);
+  renderEmps();
+  form.reset();
+  formContainer.style.display = "none";
+});
+//Delete
+//Edit
