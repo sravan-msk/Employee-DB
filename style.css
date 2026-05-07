@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+    font-family: 'Poppins';
+}
+
+.container {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding: 20px;
+    /* background-color: red; */
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.empContainer {
+    margin-top: 100px;
+    display: flex;
+    border: 2px solid black;
+    height: 70vh;
+}
+
+.empListcontainer {
+    width: 30%;
+    border-right: 2px solid black;
+}
+
+.empListHeading {
+    text-align: center;
+    border-bottom: 2px solid black;
+    padding: 10px 20px;
+}
+
+#empList {
+    height: 60vh;
+    padding: 10px 20px;
+    overflow-y: scroll;
+}
+
+.empInfoContainer {
+    width: 70%;
+    text-align: center;
+}
+
+.empInfoHeading {
+    border-bottom: 2px solid black;
+    padding: 10px 20px;
+}
+
+#empInfo {
+    padding: 10px 20px;
+}
+
+#addEmp {
+    padding: 2px 5px;
+}
