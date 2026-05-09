@@ -27,101 +27,202 @@ const employees = [
     salary: 72000,
     city: "Chennai",
   },
-  {
-    name: "Arjun Patel",
-    age: 35,
-    jobRole: "DevOps Engineer",
-    salary: 105000,
-    city: "Pune",
-  },
-  {
-    name: "Neha Gupta",
-    age: 27,
-    jobRole: "QA Engineer",
-    salary: 65000,
-    city: "Noida",
-  },
-  {
-    name: "Vikram Singh",
-    age: 31,
-    jobRole: "Product Manager",
-    salary: 98000,
-    city: "Gurgaon",
-  },
-  {
-    name: "Kavya Nair",
-    age: 24,
-    jobRole: "Frontend Developer",
-    salary: 60000,
-    city: "Kochi",
-  },
-  {
-    name: "Rohan Das",
-    age: 30,
-    jobRole: "Backend Developer",
-    salary: 82000,
-    city: "Kolkata",
-  },
-  {
-    name: "Ananya Kapoor",
-    age: 33,
-    jobRole: "HR Manager",
-    salary: 90000,
-    city: "Mumbai",
-  },
 ];
 
 const list = document.getElementById("empList");
-let selectedEmp = employees[0];
+const empinfo = document.getElementById("empInfo");
+
+const addEmpBtn = document.querySelector(".addEmp");
+const formContainer = document.querySelector(".form-container");
+const form = document.getElementById("form");
+
+let selectedEmpIndex = 0;
+let editIndex = null;
+
+/* =========================
+   RENDER EMPLOYEES
+========================= */
 
 function renderEmps() {
   list.innerHTML = "";
+
   employees.forEach((emp, idx) => {
-    let li = document.createElement("li");
-    li.textContent = `${emp.name}`;
-    if (emp === selectedEmp) {
+    const li = document.createElement("li");
+
+    li.innerHTML = `
+      <span>${emp.name}</span>
+
+      <div>
+        <button class="edit-btn">Edit</button>
+        <button class="del-btn">Delete</button>
+      </div>
+    `;
+
+    // Highlight selected employee
+    if (idx === selectedEmpIndex) {
       li.classList.add("active");
     }
+
+    // Select employee
     li.addEventListener("click", () => {
-      selectedEmp = emp;
-      empInfo(emp);
+      selectedEmpIndex = idx;
+      empInfo(employees[idx]);
       renderEmps();
     });
+
+    // Edit button
+    li.querySelector(".edit-btn").addEventListener("click", (e) => {
+      e.stopPropagation();
+      edit(idx);
+    });
+
+    // Delete button
+    li.querySelector(".del-btn").addEventListener("click", (e) => {
+      e.stopPropagation();
+      del(idx);
+    });
+
     list.appendChild(li);
   });
 }
 
-const empinfo = document.getElementById("empInfo");
+/* =========================
+   SHOW EMPLOYEE INFO
+========================= */
+
 function empInfo(emp) {
+  if (!emp) {
+    empinfo.innerHTML = `<h2>No Employee Found</h2>`;
+    return;
+  }
+
   empinfo.innerHTML = `
-            <span>${emp.city}</span>`;
+    <h2>${emp.name}</h2>
+    <p><strong>Age:</strong> ${emp.age}</p>
+    <p><strong>Role:</strong> ${emp.jobRole}</p>
+    <p><strong>Salary:</strong> ₹${emp.salary}</p>
+    <p><strong>City:</strong> ${emp.city}</p>
+  `;
 }
-renderEmps();
-empInfo(employees[0]);
 
-// addEmployeeLogic
+/* =========================
+   OPEN FORM
+========================= */
 
-let addEmp = document.querySelector(".addEmp");
-let formContainer = document.querySelector(".form-container");
-let form = document.getElementById("form");
+addEmpBtn.addEventListener("click", () => {
+  editIndex = null;
+  form.reset();
 
-addEmp.addEventListener("click", () => {
   formContainer.style.display = "flex";
 });
 
+/* =========================
+   CLOSE FORM
+========================= */
+
 formContainer.addEventListener("click", (e) => {
-  if (e.target.className === "form-container") {
+  if (e.target === formContainer) {
     formContainer.style.display = "none";
   }
 });
 
+/* =========================
+   ADD / UPDATE EMPLOYEE
+========================= */
+
 form.addEventListener("submit", (e) => {
   e.preventDefault();
+
   const data = Object.fromEntries(new FormData(form));
-  employees.push(data);
+
+  // Convert number fields
+  data.age = Number(data.age);
+  data.salary = Number(data.salary);
+
+  // Validation
+  if (
+    !data.name ||
+    !data.age ||
+    !data.jobRole ||
+    !data.salary ||
+    !data.city
+  ) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  // EDIT
+  if (editIndex !== null) {
+    employees[editIndex] = data;
+
+    selectedEmpIndex = editIndex;
+  }
+
+  // ADD
+  else {
+    employees.push(data);
+
+    selectedEmpIndex = employees.length - 1;
+  }
+
   renderEmps();
+  empInfo(employees[selectedEmpIndex]);
+
   form.reset();
   formContainer.style.display = "none";
 });
-//Delete
-//Edit
+
+/* =========================
+   DELETE EMPLOYEE
+========================= */
+
+function del(idx) {
+  const confirmDelete = confirm("Delete this employee?");
+
+  if (!confirmDelete) return;
+
+  employees.splice(idx, 1);
+
+  // Edge case: no employees left
+  if (employees.length === 0) {
+    selectedEmpIndex = -1;
+
+    renderEmps();
+    empInfo(null);
+
+    return;
+  }
+
+  // Fix selected index
+  if (selectedEmpIndex >= employees.length) {
+    selectedEmpIndex = employees.length - 1;
+  }
+
+  renderEmps();
+  empInfo(employees[selectedEmpIndex]);
+}
+
+/* =========================
+   EDIT EMPLOYEE
+========================= */
+
+function edit(idx) {
+  const emp = employees[idx];
+
+  editIndex = idx;
+
+  form.name.value = emp.name;
+  form.age.value = emp.age;
+  form.jobRole.value = emp.jobRole;
+  form.salary.value = emp.salary;
+  form.city.value = emp.city;
+
+  formContainer.style.display = "flex";
+}
+
+/* =========================
+   INITIAL LOAD
+========================= */
+
+renderEmps();
+empInfo(employees[selectedEmpIndex]);
